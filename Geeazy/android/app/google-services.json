@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "641883607214",
+    "project_id": "geeazy-e2d68",
+    "storage_bucket": "geeazy-e2d68.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641883607214:android:e047c0a924fc114b261d3f",
+        "android_client_info": {
+          "package_name": "com.geeazy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "641883607214-n63dhqe159omcd540foc5d89jur2p6um.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsG5c78Zm6XuGrd30sY4BWoHouwR4Ogtg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "641883607214-n63dhqe159omcd540foc5d89jur2p6um.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
