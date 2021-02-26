@@ -55,7 +55,7 @@ const Signup = ({navigation}) => {
 
       <FormInput
         labelValue={confirmPassword}
-        onChangeText={(userPassword) => setPassword(userPassword)}
+        onChangeText={(userPassword) => setConfirmPassword(userPassword)}
         placeholderText="Confirm Password"
         iconType="lock"
         secureTextEntry={true}
@@ -63,7 +63,7 @@ const Signup = ({navigation}) => {
 
       <FormButton
         buttonTitle="Sign Up"
-        onPress={() => { navigation.navigate('Login'); register(email,password) }}
+        onPress={() => {register(email,password)}}
         
       />
 

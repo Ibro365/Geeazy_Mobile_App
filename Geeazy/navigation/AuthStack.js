@@ -5,6 +5,7 @@ import Signup from '../screens/Signup';
 import Login from '../screens/Login';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import landingPage from '../screens/landingPage';
 
 
 
@@ -14,7 +15,13 @@ const AuthStack = () => {
   
 
   return (
-    <Stack.Navigator initialRouteName={Login}>
+    <Stack.Navigator initialRouteName={landingPage}>
+
+      <Stack.Screen 
+        name="landingPage"
+        component={landingPage}
+        options={{header: () => null}}
+      />
       
       <Stack.Screen
         name="Login"

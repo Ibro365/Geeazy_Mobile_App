@@ -8,16 +8,12 @@ import {
   StyleSheet,
   ScrollView
 } from 'react-native';
-import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
-import { AuthContext } from '../navigation/AuthProvider';
 
 
-const Login = ({navigation}) => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
 
-  const {login} = useContext(AuthContext)
+const landingPage = ({navigation}) => {
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -27,43 +23,26 @@ const Login = ({navigation}) => {
       />
       <Text style={styles.text}>Geeazy Mobile App</Text>
 
-      <FormInput
-        labelValue={email}
-        onChangeText={(userEmail) => setEmail(userEmail)}
-        placeholderText="Email"
-        iconType="user"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
+      
 
-      <FormInput
-        labelValue={password}
-        onChangeText={(userPassword) => setPassword(userPassword)}
-        placeholderText="Password"
-        iconType="lock"
-        secureTextEntry={true}
+      <FormButton
+        buttonTitle="Need Handymen Services"
+        onPress={() => navigation.navigate('Login')}
       />
 
       <FormButton
-        buttonTitle="Sign In"
-        onPress={() => login(email, password)}
+        buttonTitle="Provide Handymen Services"
+        onPress={() => navigation.navigate('Login')}
       />
 
       
 
-      <TouchableOpacity
-        style={styles.forgotButton}
-        onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.navButtonText}>
-          Don't have an acount? Create here
-        </Text>
-      </TouchableOpacity>
+      
     </ScrollView>
   );
 };
 
-export default Login;
+export default landingPage;
 
 const styles = StyleSheet.create({
     container: {

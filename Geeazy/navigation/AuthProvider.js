@@ -20,10 +20,12 @@ export const AuthProvider = ({children}) => {
                 register: async (firstName, lastName, email, password) => {
                     try {
                         await auth().createUserWithEmailAndPassword(firstName, lastName, email, password);
+                        await auth().currentUser.sendEmailVerification();
                     } catch(e) {
                         console.log(e);
                     }
                 },
+                
                 logout: async () => {
                     try{
                         await auth().signOut();
@@ -32,6 +34,8 @@ export const AuthProvider = ({children}) => {
                     }
                 }
             }}
+
+            
         
         >
             {children}
