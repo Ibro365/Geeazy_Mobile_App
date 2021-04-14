@@ -1,162 +1,170 @@
-import React, { Component } from 'react';
-import { StyleSheet, ScrollView, ActivityIndicator, View, TextInput, Text } from 'react-native';
-import { Button } from 'react-native-elements';
-import gql from "graphql-tag";
-import { Mutation } from "react-apollo";
+import React, { useState , useContext} from 'react';
+import {View, Text, StyleSheet, Button, Platform} from 'react-native';
+import { InputField, InputWrapper } from '../styles/AddPost';
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Ionicons';
+import ImagePicker from 'react-native-image-crop-picker'
+import firestore from '@react-native-firebase/firestore';
 
-const ADD_PROJECT = gql`
-    mutation AddProject(
-        $worktype: String!,
-        $projectname: String!,
-        $projectdesc: String!,
-        $budget: Number!,
-        $city: String!,
-        $contactinfo: String!) {
-        addProject(
-            worktype: $worktype,
-            projectname: $projectname,
-            projectdesc: $projectdesc,
-            budget: $budget,
-            city: $city,
-            contactinfo: $contactinfo) {
-            _id
-        }
-    }
-`;
+import {
+    AddImage,
+    SubmitBtn,
+    SubmitBtnText,
+} from '../styles/AddPost'
 
-class UploadProject extends Component {
-    static navigationOptions = {
-      title: 'Add Project',
-    };
-  
-    state = {
-      worktype: '',
-      projectname: '',
-      projectdesc: '',
-      budget: '',
-      city: '',
-      contactinfo: '',
-    }
-  
-    updateTextInput = (text, field) => {
-      const state = this.state
-      state[field] = text;
-      this.setState(state);
-    }
+import { AuthContext } from '../navigation/AuthProvider';
+
+
+const UploadProject = () => {
+
+    //const [user, logout] = useContext(AuthContext);
+
+    const {workType, setworkType} = useState(null);
+    const {projectName, setprojectName} = useState(null);
+    const {projectDesc, setprojectDesc} = useState(null);
+    const {minBudget, setminBudget} = useState(null);
+    const {maxBudget, setmaxBudget} = useState(null);
+    const {city, setCity} = useState(null);
+    const {contactInfo, setcontactInfo} = useState(null);
     
-    render() {
-      const { isbn, title, author, description, published_year, publisher } = this.state;
-      return (
-        <Mutation mutation={ADD_PROJECT} onCompleted={() => this.props.navigation.goBack()}>
-            {(addProject, { loading, error }) => (
-              <ScrollView style={styles.container}>
-                <View style={styles.subContainer}>
-                  <TextInput
-                      style={styles.textInput}
-                      placeholder={'Enter a Category of work'}
-                      value={this.state.worktype}
-                      onChangeText={(text) => this.updateTextInput(text, 'worktype')}
-                  />
-                </View>
-                <View style={styles.subContainer}>
-                  <TextInput
-                      style={styles.textInput}
-                      placeholder={'Enter Project Name'}
-                      value={this.state.projectname}
-                      onChangeText={(text) => this.updateTextInput(text, 'projectname')}
-                  />
-                </View>
-                <View style={styles.subContainer}>
-                  <TextInput
-                      style={styles.textInput}
-                      placeholder={'Describe your project here...'}
-                      multiline={true}
-                      numberOfLines={4}
-                      value={this.state.projectdesc}
-                      onChangeText={(text) => this.updateTextInput(text, 'projectdesc')}
-                  />
-                </View>
-                <View style={styles.subContainer}>
-                  <TextInput
-                      keyboardType="numeric"
-                      style={styles.textInput}
-                      placeholder={'Enter Budget Price'}
-                      value={this.state.budget}
-                      onChangeText={(text) => this.updateTextInput(text, 'budget')}
-                  />
-                </View>
-                <View style={styles.subContainer}>
-                  <TextInput
-                      style={styles.textInput}
-                      placeholder={'Enter City'}
-                      value={this.state.city}
-                      onChangeText={(text) => this.updateTextInput(text, 'city')}
-                  />
-                </View>
-                <View style={styles.subContainer}>
-                  <TextInput
-                      style={styles.textInput}
-                      placeholder={'Enter your email address or phone number'}
-                      value={this.state.contactinfo}
-                      onChangeText={(text) => this.updateTextInput(text, 'contactinfo')}
-                  />
-                </View>
-                <View>
-                  <Button
-                    large
-                    leftIcon={{name: 'save'}}
-                    title='Save'
-                    onPress={() => {
-                      addProject({
-                        variables: {
-                          worktype: this.state.worktype,
-                          projectname: this.state.projectname,
-                          projectdesc: this.state.projectdesc,
-                          budget: parseInt(this.state.budget),
-                          city: this.state.city,
-                          contactinfo: parseInt(this.state.contactinfo),
-                        }
-                      })
-                        .then(res => this.setState({ worktype: '', projectname: '', projectdesc: '', budget, city: '', contactinfo: '' }))
-                        .catch(err => <Text>{err}</Text>);
-                    }} />
-                </View>
-                {loading && <View style={styles.activity}>
-                    <ActivityIndicator size="large" color="#0000ff" />
-                  </View>}
-                {error && <Text>`Error! ${error.message}`</Text>}
-              </ScrollView>
-            )}
-          </Mutation>
-      );
-    }
-  }
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 20
+    const [image, setImage] = useState(null);
+
+        const takePhotoFromCamera = () => {
+            ImagePicker.openCamera({
+                width: 1200,
+                height: 700,
+                cropping: true,
+            }).then((image) => {
+                console.log(image);
+                const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+                setImage(imageUri);
+            });
+        };
+
+        const choosePhotoFromLibrary = () => {
+            ImagePicker.openPicker({
+                width: 1200,
+                height: 700,
+                cropping: true,
+            }).then((image) => {
+                console.log(image);
+                const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+                setImage(imageUri);
+            });
+        };
+
+        const submitPost = async () => {
+            firestore()
+            .collection('posts')
+            .add({
+                //userId: user.uid,
+                workType: workType,
+                projectName: projectName,
+                projectDesc: projectDesc,
+                minBudget: setminBudget,
+                maxBudget: setmaxBudget,
+                city: city,
+                contactInfo: contactInfo,
+            })
+            .then(() => {
+                console.log('Post Adeded');
+                //setworkType(null);
+                setprojectName(null);
+                setprojectDesc(null);
+                setminBudget(null);
+                setmaxBudget(null);
+                setCity(null);
+                setcontactInfo(null);
+            })
+            .catch((error) => {
+                console.log('Something went wrong with the post.' , error);
+            });
+        }
+
+        return(
+            
+            <View style={styles.container}>
+            <InputWrapper>
+                {image != null ? <AddImage source={{uri: image}} /> : null}
+                <InputField
+                    placeholder="What type of work do you require?"
+                    multiline
+                    numberOfLine={4}
+                    value={workType}
+                    onChangeText={(content) => setworkType(content)}
+                />
+                <InputField
+                    placeholder="What is your project name?"
+                    multiline
+                    numberOfLine={1}
+                    value={projectName}
+                    onChangeText={(content) => setprojectName(content)}
+                />
+                <InputField
+                    placeholder="Describe your project"
+                    multiline
+                    numberOfLine={4}
+                    value={projectDesc}
+                    onChangeText={(content) => setprojectDesc(content)}
+                />
+                <InputField
+                    placeholder="Enter your minimum budget"
+                    multiline
+                    numberOfLine={1}
+                    value={minBudget}
+                    onChangeText={(content) => setminBudget(content)}
+                />
+                <InputField
+                    placeholder="Enter your maximum budget"
+                    multiline
+                    numberOfLine={1}
+                    value={maxBudget}
+                    onChangeText={(content) => setmaxBudget(content)}
+                />
+                <InputField
+                    placeholder="Enter City"
+                    multiline
+                    numberOfLine={1}
+                    value={city}
+                    onChangeText={(content) => setCity(content)}
+                />
+                <InputField
+                    placeholder="Enter your email or phone number"
+                    multiline
+                    numberOfLine={1}
+                    value={contactInfo}
+                    onChangeText={(content) => setcontactInfo(content)}
+                />
+                <SubmitBtn onPress={submitPost}>
+                    <SubmitBtnText>Post</SubmitBtnText>
+                </SubmitBtn>
+            </InputWrapper>
+            <ActionButton buttonColor="rgba(231,76,60,1)">
+          <ActionButton.Item buttonColor='#9b59b6' title="Take Photo" onPress={takePhotoFromCamera}>
+            <Icon name="camera-outline" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+          <ActionButton.Item buttonColor='#3498db' title="Choose Photo" onPress={choosePhotoFromLibrary}>
+            <Icon name="md-images-outline" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+          
+        </ActionButton>
+        </View>
+        );
+    
+};
+
+export default UploadProject;
+
+const styles = StyleSheet.create({
+    container : {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
-    subContainer: {
-      flex: 1,
-      marginBottom: 20,
-      padding: 5,
-      borderBottomWidth: 2,
-      borderBottomColor: '#CCCCCC',
+    actionButtonIcon: {
+        fontSize: 20,
+        height: 22,
+        color: 'white',
     },
-    activity: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    textInput: {
-      fontSize: 18,
-      margin: 5,
-    },
-  })
-  
-  export default UploadProject;
+
+});

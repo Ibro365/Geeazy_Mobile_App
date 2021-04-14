@@ -1,12 +1,21 @@
 import React, {useContext} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import { AuthContext } from '../navigation/AuthProvider';
+import {View, Text, StyleSheet, SafeAreaView, ScrollView, Image} from 'react-native';
+import FormInput from '../components/FormInput';
+import FormButton from '../components/FormButton';
 
 const Review = () => {
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>Welcome to the Review Page</Text>
-        </View>
+        <SafeAreaView style={{flex:1, backgroundColor: '#fff'}}>
+            <ScrollView
+              style={styles.container}
+              contentContainerStyle={{justifyContent: 'center', alignItems: 'center'}}
+              showsVerticalScrollIndicator={false}
+            >
+                <Text style={styles.reviewTitle}>Search for a Company or Handyman to Review</Text>
+                <FormInput placeholderText="Write the handymen or company name" />
+                <FormButton buttonTitle="Search" />
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
@@ -14,14 +23,18 @@ export default Review;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#f9fafd',
+        backgroundColor: '#fff',
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         padding: 20,
     },
     text: {
         fontSize: 20,
         color: '#333333'
-    }
+    },
+    reviewTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginBottom: 10,
+      },
 });

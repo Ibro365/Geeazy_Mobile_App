@@ -3,8 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import UploadProject from '../screens/UploadProject';
 import Review from '../screens/Review';
-import listProjects from '../screens/listProjects';
-import projectDetails from '../screens/projectDetails';
+import Dashboard from '../screens/Dashboard';
+
 
 
 
@@ -26,13 +26,11 @@ const AppStack = ({navigation}) => (
       component={Review}
     />
     <Tab.Screen 
-      name="listProjects"
-      component={listProjects}
+      name="Dashboard"
+      component={Dashboard}
     />
-    <Tab.Screen
-      name="projectDetails"
-      component={projectDetails}
-    />
+    
+    
   </Tab.Navigator>
 );
 
